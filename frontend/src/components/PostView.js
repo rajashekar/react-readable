@@ -10,40 +10,44 @@ import CreateComment from './CreateComment';
 class PostView extends Component {
 
     render() {
-        const { post,comments,vote,onDeletePost,onSelectPost,
+        const { post,comments,vote,onDeletePost,onSelectPost,sortBy,
                 onCreateComment,onDeleteComment,onEditComment,
                 onEditDone,onChangeComment } = this.props
         return (
             <div className="postdetail">
-                <Link className='button' to='/'>Back</Link>
-                <Link className='button' onClick={() => onSelectPost(post.id)} to={'/editpost/'+post.id}>Edit</Link>
-                <Link className='button' onClick={() => onDeletePost(post.id)} to='/'>Delete</Link>
-                <h1>{post.title}</h1>
-                <div>Author: {post.author}</div>
-                <div>Posted: <Timestamp time={post.timestamp/1000}/></div>
-                <div>Category: {post.category}</div>
-                <div>Vote Score: {post.voteScore}</div>
-                <div>{post.body}</div>
-                <div><b>{post.commentCount} comments : </b></div>
-                <div>
-                    <Comments
-                        parentId={post.id}
-                        comments={comments}
-                        vote={vote}
-                        onDeleteComment={onDeleteComment}
-                        onEditComment={onEditComment}
-                        onChangeComment={onChangeComment}
-                        onEditDone={onEditDone}
-                    />
+                {post!==undefined && <div>
+                    <Link className='button' to='/'>Back</Link>
+                    <Link className='button' onClick={() => onSelectPost(post.id)} to={'/editpost/'+post.id}>Edit</Link>
+                    <Link className='button' onClick={() => onDeletePost(post.id)} to='/'>Delete</Link>
+                    <h1>{post.title}</h1>
+                    <div>Author: {post.author}</div>
+                    <div>Posted: <Timestamp time={post.timestamp/1000}/></div>
+                    <div>Category: {post.category}</div>
+                    <div>Vote Score: {post.voteScore}</div>
+                    <div>{post.body}</div>
+                    <div><b>{post.commentCount} comments : </b></div>
+                    <div>
+                        <Comments
+                            parentId={post.id}
+                            comments={comments}
+                            sortBy={sortBy}
+                            vote={vote}
+                            onDeleteComment={onDeleteComment}
+                            onEditComment={onEditComment}
+                            onChangeComment={onChangeComment}
+                            onEditDone={onEditDone}
+                        />
+                    </div>
+                    <div>
+                        <CreateComment
+                            parentId={post.id}
+                            onCreateComment={onCreateComment}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <CreateComment
-                        parentId={post.id}
-                        onCreateComment={onCreateComment}
-                    />
-                </div>
+                }
             </div>
-        );
+        )
     }
 }
 

@@ -10,16 +10,16 @@ import Timestamp from 'react-timestamp'
 class Comments extends Component {
 
     render() {
-        const {comments,vote,parentId,onDeleteComment,
+        const {comments,vote,parentId,onDeleteComment,sortBy,
                 onEditComment,onEditDone,onChangeComment} = this.props
         return (
             <div>
-                {comments.map(comment => (
+                {comments!==undefined && comments.map(comment => (
                 !comment.deleted &&  <div className="post" key={comment.id}>
                         <div className="midcol">
-                            <div className="arrow up" onClick={() => vote("comments","upVote",comment.id)}></div>
+                            <div className="arrow up" onClick={() => vote("comments","upVote",comment.id, comments, sortBy)}></div>
                             <div className="score">{comment.voteScore}</div>
-                            <div className="arrow down" onClick={() => vote("comments","downVote",comment.id)}></div>
+                            <div className="arrow down" onClick={() => vote("comments","downVote",comment.id, comments, sortBy)}></div>
                         </div>
                         {comment.edit? 
                         <div>

@@ -9,7 +9,7 @@ import '../App.css';
  */
 class Posts extends Component {
   render() {
-    const { posts, sort,vote,onSelectPost } = this.props
+    const { posts, sort, sortBy ,vote,onSelectPost } = this.props
     return (
       <div className="layout_3col_center">
           <div>
@@ -20,12 +20,12 @@ class Posts extends Component {
                   <option value="date">date</option>
               </select>
           </div>
-          { posts.map(post => (
+          { posts!==undefined && posts.map(post => (
           !post.deleted && <div key={post.id}>
                 <div className="midcol">
-                    <div className="arrow up" onClick={() => vote("posts","upVote",post.id)}></div>
+                    <div className="arrow up" onClick={() => vote("posts","upVote",post.id,posts,sortBy)}></div>
                     <div className="score">{post.voteScore}</div>
-                    <div className="arrow down" onClick={() => vote("posts","downVote",post.id)}></div>
+                    <div className="arrow down" onClick={() => vote("posts","downVote",post.id,posts,sortBy)}></div>
                 </div>
                 <Link to={`/post/${post.id}`} className="post" key={post.id}>
                 <div>

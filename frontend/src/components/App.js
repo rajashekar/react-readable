@@ -5,7 +5,9 @@ import Posts from './Posts';
 import PostView from './PostView';
 import CreatePost from './CreatePost'
 import EditPost from './EditPost'
+import { connect } from 'react-redux'
 import * as ReadableAPI from '../api/ReadableAPI'
+import { getCategories,onSelectCategory,onSelectPost,sort,vote } from '../actions'
 import '../App.css';
 
 /*
@@ -26,17 +28,17 @@ class App extends Component {
 
    // Initially mount all Categories and all Posts
   componentDidMount() {
+    const {getCategories, onSelectCategory} = this.props
+    const {sortBy} = this.props.readable
     var context = window.location.pathname === "/"? 
         "all": window.location.pathname.substr(1);
     if(context === "all" || context.startsWith('category'))  {
-        ReadableAPI.getCategories().then((categories) => {
-            this.setState({categories})
-            var category = context.substring(context.indexOf("/")+1,context.length);
-            this.onSelectCategory(category);
-        });
+        var category = context.substring(context.indexOf("/")+1,context.length);
+        getCategories()
+        onSelectCategory(category,sortBy!==undefined?sortBy:"votes")
     } else if(context.startsWith('post')) {
-        var post = context.substring(context.indexOf("/")+1,context.length);
-        this.onSelectPost(post);
+        var postid = context.substring(context.indexOf("/")+1,context.length);
+        onSelectPost(postid)
     }
   }
 
@@ -71,33 +73,6 @@ class App extends Component {
         return allPosts
     }
   )
-
-  // on select category get all posts of category
-  onSelectCategory = (category) => {
-    // if category is all get all posts
-    if(category === "all") {
-        ReadableAPI.getPosts().then((posts) => {
-            this.sort("posts", posts, this.state.sortBy)
-        });
-    } else {
-        ReadableAPI.getCategoryPosts(category).then((posts) => {
-            this.sort("posts", posts, this.state.sortBy)
-        });
-    }
-    console.log("category: ",category)
-  }
-
-  // on select post get all post details of that post
-  onSelectPost = (postid) => {
-    console.log(postid);
-    ReadableAPI.getPost(postid).then((post) => {
-        this.setState({selectedPost: post})
-    })
-    ReadableAPI.getComments(postid).then((comments) => {
-        comments.map(c => {c.edit=false;return c;})
-        this.sort("comments", comments,"votes")
-    })
-  }
 
   // for sorting based on votes or date
   sort = (type, posts, sortBy) => {
@@ -186,16 +161,19 @@ class App extends Component {
 
   // For rendering categories
   renderCategory = () => {
-    const { categories,posts } = this.state
+    console.log(this.props.readable)
+    const { categories,posts,sortBy } = this.props.readable
+    const { onSelectCategory, onSelectPost, sort, vote} = this.props
     return (
         <div>
-            <Categories categories={categories} onSelectCategory={this.onSelectCategory}/>
+            <Categories categories={categories} onSelectCategory={onSelectCategory}/>
             <div className='grid_page'>
                 <Posts 
                     posts={posts} 
-                    sort={this.sort}
-                    vote={this.vote} 
-                    onSelectPost={this.onSelectPost}
+                    sort={sort}
+                    sortBy={sortBy}
+                    vote={vote} 
+                    onSelectPost={onSelectPost}
                 />
             </div>
         </div>
@@ -204,17 +182,19 @@ class App extends Component {
 
   // For rendering Posts
   renderPost = (history) => {
-    const { comments,selectedPost } = this.state
+    const { comments,selectedPost,sortBy } = this.props.readable
+    const { onSelectPost, vote } = this.props
     return (
         <div>
             <PostView 
                 post={selectedPost}
                 comments={comments}
-                vote={this.vote}
+                sortBy={sortBy}
+                vote={vote}
                 onDeletePost={(postid) => {
                     this.deletePost(postid)
                 }}
-                onSelectPost={this.onSelectPost}
+                onSelectPost={onSelectPost}
                 onCreateComment={this.createComment}
                 onDeleteComment={this.deleteComment}
                 onEditComment={this.editComment}
@@ -272,4 +252,18 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps({readable}) {
+    return {
+        readable
+    }
+}
+
+const mapDispatchToProps =  {
+    getCategories,
+    onSelectCategory,
+    onSelectPost,
+    sort,
+    vote
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);
