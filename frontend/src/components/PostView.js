@@ -10,7 +10,7 @@ import CreateComment from './CreateComment';
 class PostView extends Component {
 
     render() {
-        const { post,comments,vote,onDeletePost,onSelectPost,sortBy,
+        const { posts,post,comments,vote,onDeletePost,onSelectPost,sortBy,
                 onCreateComment,onDeleteComment,onEditComment,
                 onEditDone,onChangeComment } = this.props
         return (
@@ -18,7 +18,7 @@ class PostView extends Component {
                 {post!==undefined && <div>
                     <Link className='button' to='/'>Back</Link>
                     <Link className='button' onClick={() => onSelectPost(post.id)} to={'/editpost/'+post.id}>Edit</Link>
-                    <Link className='button' onClick={() => onDeletePost(post.id)} to='/'>Delete</Link>
+                    <Link className='button' onClick={() => onDeletePost(post.id,posts,sortBy)} to='/'>Delete</Link>
                     <h1>{post.title}</h1>
                     <div>Author: {post.author}</div>
                     <div>Posted: <Timestamp time={post.timestamp/1000}/></div>

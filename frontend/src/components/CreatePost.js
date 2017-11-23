@@ -30,6 +30,7 @@ class CreatePost extends Component {
 	}
 
     render() {
+        console.log('Create post')
         return (
             <div className="container">
                 <Link className='text-left' to='/'>Back</Link>

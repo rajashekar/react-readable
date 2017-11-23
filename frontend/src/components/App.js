@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom'
+import { Route,withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+
 import Categories from './Categories';
 import Posts from './Posts';
 import PostView from './PostView';
 import CreatePost from './CreatePost'
 import EditPost from './EditPost'
-import { connect } from 'react-redux'
-import * as ReadableAPI from '../api/ReadableAPI'
-import { getCategories,onSelectCategory,onSelectPost,sort,vote } from '../actions'
+
+import { getCategories,onSelectCategory,
+         onSelectPost, createPost, editPost, deletePost, 
+         createComment, deleteComment, editComment, changeComment, editDone,
+         sort, vote} from '../actions'
+
 import '../App.css';
 
 /*
@@ -15,16 +20,6 @@ import '../App.css';
  */
 
 class App extends Component {
-
-  // State object
-  state = {
-    categories : [],
-    posts : [],
-    comments: [],
-    selectedPost : {},
-    sortBy : 'votes',
-    modifiedComment : ""
-  }
 
    // Initially mount all Categories and all Posts
   componentDidMount() {
@@ -40,123 +35,6 @@ class App extends Component {
         var postid = context.substring(context.indexOf("/")+1,context.length);
         onSelectPost(postid)
     }
-  }
-
-  // for voting both posts & comments
-  vote = (type,option,id) => {
-    if(type === 'posts') {
-        ReadableAPI.vote(type,option,id).then((result) => {
-            this.setUpdatedResults(type,this.state.posts,result,this.state.sortBy)
-        });
-    } else {
-        ReadableAPI.vote(type,option,id).then((result) => {
-            this.setUpdatedResults(type,this.state.comments,result,"votes")
-        });
-    }
-  }
-
-  // update the results
-  setUpdatedResults = (type, currentPosts, post, sortBy) => {
-    var posts = currentPosts.reduce(this.updateResults(post),[]);
-    this.sort(type, posts,sortBy)
-  }
-  updateResults = (updatedPost) => (
-    (allPosts,post) => {
-        if(post.id === updatedPost.id) {
-            post.title = updatedPost.title
-            post.body = updatedPost.body
-            post.voteScore = updatedPost.voteScore
-            post.deleted = updatedPost.deleted
-            post.commentCount = updatedPost.commentCount
-        }
-        allPosts.push(post)
-        return allPosts
-    }
-  )
-
-  // for sorting based on votes or date
-  sort = (type, posts, sortBy) => {
-      // sort before to set state
-      if(type === 'posts') {
-        if(sortBy === 'votes') {
-            this.setState({posts: posts.sort((a,b) => b.voteScore-a.voteScore)});
-        } else {
-            this.setState({posts: posts.sort((a,b) => b.timestamp-a.timestamp)});
-        }
-      } else {
-        this.setState({comments: posts.sort((a,b) => b.voteScore-a.voteScore)});
-      }
-  }
-
-  // to create post
-  createPost = (post) => {
-    ReadableAPI.createPost(post).then((posts) => {
-        this.setState((state) => ({
-            posts: state.posts.concat([post])
-        }))
-    })
-  }
-
-  // to delete post
-  deletePost = (postid) => {
-    ReadableAPI.deletePost(postid).then((result) => {
-        this.setUpdatedResults("posts",this.state.posts,result,this.state.sortBy)
-    })
-  }
-
-  editPost = (post) => {
-    console.log(post)
-    ReadableAPI.editPost(post).then((result) => {
-        this.setUpdatedResults("posts",this.state.posts,result,this.state.sortBy)
-    })
-  }
-
-  createComment = (comment) => {
-    console.log(comment);
-    ReadableAPI.createComment(comment).then((result) => {
-        // first set comments & sort
-        this.sort("comments", [...this.state.comments,result],"votes")
-        //  increment comment count at selected post
-        this.setState((state) => ({
-            selectedPost: {...state.selectedPost,
-                    commentCount:state.selectedPost.commentCount+1}
-        }))
-        // increment comment count at posts
-        this.setUpdatedResults("posts",this.state.posts,this.state.selectedPost,this.state.sortBy)
-    })
-  }
-
-  deleteComment = (commentid) => {
-    ReadableAPI.deleteComment(commentid).then((result) => {
-        this.setUpdatedResults("comments",this.state.comments,result,"votes")
-        this.setState({selectedPost: {...this.state.selectedPost,
-                commentCount:this.state.selectedPost.commentCount-1}});
-        this.setUpdatedResults("posts",this.state.posts,this.state.selectedPost,this.state.sortBy)
-    })
-  }
-
-  editComment = (commentid) => {
-    this.setState((state) => ({
-        comments: state.comments.map(comment => {
-            if(comment.id === commentid) {
-                comment.edit = !comment.edit
-            }
-            return comment;
-        })
-    }))
-  }
-
-  changeComment = (e) => {
-    console.log(e.target.value)
-    this.setState({ modifiedComment: e.target.value });
-  }
-
-  editDone = (commentid) => {
-    var comment = {id:commentid, body:this.state.modifiedComment, timestamp: Date.now()}
-    ReadableAPI.editComment(comment).then((result) => {
-        this.setUpdatedResults("comments",this.state.comments,result,"votes")
-    })
-    this.editComment(commentid)
   }
 
   // For rendering categories
@@ -182,24 +60,25 @@ class App extends Component {
 
   // For rendering Posts
   renderPost = (history) => {
-    const { comments,selectedPost,sortBy } = this.props.readable
-    const { onSelectPost, vote } = this.props
+    const { posts,comments,selectedPost,sortBy,modifiedComment } = this.props.readable
+    const { onSelectPost, vote, deletePost, 
+            createComment, editComment, deleteComment,
+            changeComment, editDone} = this.props
     return (
         <div>
             <PostView 
+                posts={posts}
                 post={selectedPost}
                 comments={comments}
                 sortBy={sortBy}
                 vote={vote}
-                onDeletePost={(postid) => {
-                    this.deletePost(postid)
-                }}
+                onDeletePost={deletePost}
                 onSelectPost={onSelectPost}
-                onCreateComment={this.createComment}
-                onDeleteComment={this.deleteComment}
-                onEditComment={this.editComment}
-                onEditDone={this.editDone}
-                onChangeComment={this.changeComment}
+                onCreateComment={comment => createComment(comment,comments)}
+                onDeleteComment={commentid => deleteComment(commentid,comments)}
+                onEditComment={commentid => editComment(commentid,comments)}
+                onChangeComment={changeComment}
+                onEditDone={commentid => editDone(commentid,modifiedComment,comments)}
                 onClick={() => {
                     history.push('/')
                 }}
@@ -214,7 +93,7 @@ class App extends Component {
         <div>
             <CreatePost
                 onCreatePost={(post) => {
-                    this.createPost(post)
+                    this.props.createPost(post)
                     history.push('/')
                 }}
             />
@@ -224,13 +103,13 @@ class App extends Component {
 
   // For rendering Edit post
   renderEditPost = (history) => {
-    const { selectedPost } = this.state
+    const { selectedPost,posts,sortBy } = this.props.readable
     return (
         <div>
             <EditPost
                 post={selectedPost}
                 onEditPost={(post) => {
-                    this.editPost(post)
+                    this.props.editPost(post,posts,sortBy)
                     history.push('/')
                 }}
             />
@@ -259,11 +138,11 @@ function mapStateToProps({readable}) {
 }
 
 const mapDispatchToProps =  {
-    getCategories,
-    onSelectCategory,
-    onSelectPost,
-    sort,
-    vote
+    getCategories, onSelectCategory,
+    onSelectPost, createPost, editPost, deletePost,
+    createComment, deleteComment, editComment, changeComment, editDone,
+    sort, vote
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+// withRouter is needed since some of the Route's are not working
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App))
