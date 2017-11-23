@@ -23,7 +23,7 @@ class App extends Component {
 
    // Initially mount all Categories and all Posts
   componentDidMount() {
-    const {getCategories, onSelectCategory} = this.props
+    const {getCategories, onSelectCategory, onSelectPost} = this.props
     const {sortBy} = this.props.readable
     var context = window.location.pathname === "/"? 
         "all": window.location.pathname.substr(1);
@@ -39,7 +39,6 @@ class App extends Component {
 
   // For rendering categories
   renderCategory = () => {
-    console.log(this.props.readable)
     const { categories,posts,sortBy } = this.props.readable
     const { onSelectCategory, onSelectPost, sort, vote} = this.props
     return (
@@ -123,8 +122,8 @@ class App extends Component {
         <div className='ContentWrapper'>
             <Route exact path="/" render={() => this.renderCategory()}/>
             <Route path="/category" render={() => this.renderCategory()}/>
-            <Route path="/post" render={({history}) => this.renderPost(history)}/>
             <Route path="/newpost" render={({history}) => this.renderCreatePost(history)}/>
+            <Route path="/post" render={({history}) => this.renderPost(history)}/>
             <Route path="/editpost" render={({history}) => this.renderEditPost(history)}/>
         </div>
     );

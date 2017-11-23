@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom'
-import '../App.css';
 
 /**
  * This component will show categories on right side.
