@@ -12,7 +12,7 @@
 Go to `localhost:3000` to access the app
 
 ### Redux state structure
-![readable state](https://github.com/rajashekar/readable-only-react/blob/master/frontend/public/readable_state.png)
+![readable state](https://github.com/rajashekar/react-readable/blob/master/frontend/public/readable_state.png)
 
 ### Demo of readable project (Duration 2 mins)
 Demo length 1 minute 30 secs, please check right side for demo progress.
