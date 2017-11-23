@@ -11,7 +11,7 @@
 
 Go to `localhost:3000` to access the app
 
-### Redux state structure
+### Redux state structure for readable app
 ![readable state](https://github.com/rajashekar/react-readable/blob/master/frontend/public/readable_state.png)
 
 ### Demo of readable project (Duration 2 mins)
