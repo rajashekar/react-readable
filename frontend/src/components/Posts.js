@@ -8,7 +8,7 @@ import Timestamp from 'react-timestamp'
  */
 class Posts extends Component {
   render() {
-    const { posts, sort, sortBy ,vote,onSelectPost } = this.props
+    const { posts, sort, sortBy ,vote,onSelectPost,onDeletePost } = this.props
     return (
       <div className="layout_3col_center">
           <div>
@@ -26,16 +26,20 @@ class Posts extends Component {
                     <div className="score">{post.voteScore}</div>
                     <div className="arrow down" onClick={() => vote("posts","downVote",post.id,posts,sortBy)}></div>
                 </div>
-                <Link to={`/post/${post.id}`} className="post" key={post.id}>
-                <div>
-                    <div>
-                        <b className="posttitle" onClick={() => onSelectPost(post.id)}>{post.title}</b> by <i>{post.author}</i>
-                        &nbsp; (posted on <Timestamp time={post.timestamp/1000}/>)
+                <div className="post">
+                    <Link to={`/post/${post.id}`} className="post-title" key={post.id}>
+                        <div>
+                            <b className="posttitle" onClick={() => onSelectPost(post.id)}>{post.title}</b> by <i>{post.author}</i>
+                            &nbsp; (posted on <Timestamp time={post.timestamp/1000}/>)
+                        </div>
+                    </Link>
+                    <div className="post-detail">
+                        <div>{post.body}</div>
+                        <div>{post.commentCount} comments</div>
+                        <Link className='button' onClick={() => onSelectPost(post.id)} to={'/editpost/'+post.id}>Edit</Link>
+                        <Link className='button' onClick={() => onDeletePost(post.id,posts,sortBy)} to='/'>Delete</Link>
                     </div>
-                    <div>{post.body}</div>
-                    <div>{post.commentCount} comments</div>
                 </div>
-                </Link>
              </div> 
           ))}
       </div>

@@ -19,6 +19,7 @@ class EditPost extends Component {
             <div className="container">
                 <Link className='text-left' to='/'>Back</Link>
                 <div className="text-center">Edit Post Form</div>
+                {post!==undefined && 
 				<form onSubmit={this.handleSubmit} className='create-post-form'>
                     <input type="hidden" name="id" value={post.id}/>
                     <div className="row"><div className="col-25"><label>Title</label></div>
@@ -35,6 +36,7 @@ class EditPost extends Component {
                         <input type="submit" value="Submit"/>
                     </div>
                 </form>
+                }
             </div>
         );
     }

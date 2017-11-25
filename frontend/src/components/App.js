@@ -40,7 +40,7 @@ class App extends Component {
   // For rendering categories
   renderCategory = () => {
     const { categories,posts,sortBy } = this.props.readable
-    const { onSelectCategory, onSelectPost, sort, vote} = this.props
+    const { onSelectCategory, onSelectPost, deletePost, sort, vote} = this.props
     return (
         <div>
             <Categories categories={categories} onSelectCategory={onSelectCategory}/>
@@ -51,6 +51,7 @@ class App extends Component {
                     sortBy={sortBy}
                     vote={vote} 
                     onSelectPost={onSelectPost}
+                    onDeletePost={deletePost}
                 />
             </div>
         </div>
