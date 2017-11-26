@@ -187,6 +187,10 @@ label {
     width: 300px;
 }
 
+.post-view-vote {
+    margin-top: 20px;
+}
+
 @media (max-width: 600px) {
     .col-25, .col-75, input[type=submit] {
         width: 100%;

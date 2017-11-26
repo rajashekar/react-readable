@@ -41,6 +41,13 @@ class PostView extends Component {
                     <Link className='button' to='/'>Back</Link>
                     <Link className='button' onClick={() => onSelectPost(selectedPost.id)} to={'/editpost/'+selectedPost.id}>Edit</Link>
                     <Link className='button' onClick={() => deletePost(selectedPost.id,posts,sortBy)} to='/'>Delete</Link>
+                    <div className="post-view-vote">
+                        <div className="midcol">
+                            <div className="arrow up" onClick={() => vote("posts","upVote",selectedPost.id,posts,sortBy)}></div>
+                            <div className="score">{selectedPost.voteScore}</div>
+                            <div className="arrow down" onClick={() => vote("posts","downVote",selectedPost.id,posts,sortBy)}></div>
+                        </div>
+                    </div>
                     <h1>{selectedPost.title}</h1>
                     <div>Author: {selectedPost.author}</div>
                     <div>Posted: <Timestamp time={selectedPost.timestamp/1000}/></div>

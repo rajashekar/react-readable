@@ -98,7 +98,10 @@ export const  sort = (type, items, sortBy) => dispatch => {
 // for voting both posts & comments
 export const vote = (type,option,id,items,sortBy) => dispatch => {
     if(type === 'posts') {
-        ReadableAPI.vote(type,option,id).then((result) => dispatch(setUpdatedResults(type,items,result,sortBy)))
+        ReadableAPI.vote(type,option,id).then((result) => { 
+            dispatch(setUpdatedResults(type,items,result,sortBy))
+            dispatch(getPost(result))
+        })
     } else {
         ReadableAPI.vote(type,option,id).then((result) => dispatch(setUpdatedResults(type,items,result,"votes")))
     }
