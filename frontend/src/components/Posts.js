@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom'
 import Timestamp from 'react-timestamp'
 
@@ -6,21 +6,20 @@ import Timestamp from 'react-timestamp'
  * For showing post details
  * Gives option for voting & sorting
  */
-class Posts extends Component {
-  render() {
-    const { posts, sort, sortBy ,vote,onSelectPost,onDeletePost } = this.props
+const Posts = (props) => {
+    const { posts, sort, sortBy ,vote,onSelectPost,onDeletePost } = props
     return (
-      <div className="layout_3col_center">
-          <div>
-              <Link className="button" to={`/newpost`}>Create Post</Link>
-              <b className="sortby">Posts</b> sort by : &nbsp;
-              <select onChange={e => sort("posts", posts, e.target.value)}>
-                  <option value="votes">votes</option>
-                  <option value="date">date</option>
-              </select>
-          </div>
-          { posts!==undefined && posts.map(post => (
-          !post.deleted && <div key={post.id}>
+        <div className="layout_3col_center">
+            <div>
+                <Link className="button" to={`/newpost`}>Create Post</Link>
+                <b className="sortby">Posts</b> sort by : &nbsp;
+                <select onChange={e => sort("posts", posts, e.target.value)}>
+                    <option value="votes">votes</option>
+                    <option value="date">date</option>
+                </select>
+            </div>
+            { posts!==undefined && posts.map(post => (
+            !post.deleted && <div key={post.id}>
                 <div className="midcol">
                     <div className="arrow up" onClick={() => vote("posts","upVote",post.id,posts,sortBy)}></div>
                     <div className="score">{post.voteScore}</div>
@@ -40,11 +39,10 @@ class Posts extends Component {
                         <Link className='button' onClick={() => onDeletePost(post.id,posts,sortBy)} to='/'>Delete</Link>
                     </div>
                 </div>
-             </div> 
-          ))}
-      </div>
-    );
-  }
+                </div> 
+            ))}
+        </div>
+    )
 }
 
 export default Posts;
