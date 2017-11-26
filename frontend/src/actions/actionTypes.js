@@ -1,0 +1,14 @@
+export const LOAD_CATEGORIES = 'LOAD_CATEGORIES'
+export const LOAD_POSTS = 'LOAD_POSTS'
+export const LOAD_COMMENTS = 'LOAD_COMMENTS'
+
+export const GET_POST = 'GET_POST'
+export const SET_SORT_TYPE = 'SET_SORT_TYPE'
+
+export const NEW_POST = 'NEW_POST'
+export const UP_COMMENT_COUNT = 'UP_COMMENT_COUNT'
+export const DOWN_COMMENT_COUNT = 'DOWN_COMMENT_COUNT'
+
+export const UPDATE_COMMENT = 'UPDATE_COMMENT'
+export const REMOVE_COMMENT = 'REMOVE_COMMENT'
+export const VOTE_COMMENT = 'VOTE_COMMENT'

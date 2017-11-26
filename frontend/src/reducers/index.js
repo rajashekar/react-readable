@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 import { LOAD_CATEGORIES,LOAD_POSTS,LOAD_COMMENTS,
          GET_POST, SET_SORT_TYPE, NEW_POST, 
-         UP_COMMENT_COUNT,DOWN_COMMENT_COUNT, UPDATE_COMMENT } from '../actions'
+         UP_COMMENT_COUNT,DOWN_COMMENT_COUNT, 
+         UPDATE_COMMENT } from '../actions/actionTypes'
 
 function readable(state = {},action) {
     const { categories,posts,comments,selectedPost,sortBy,post,modifiedComment } = action

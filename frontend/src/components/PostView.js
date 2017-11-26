@@ -25,7 +25,8 @@ class PostView extends Component {
     return (
         post!==undefined && 
         post.id!==undefined && 
-        post.error===undefined)
+        post.error===undefined
+    )
   }
 
     render() {
