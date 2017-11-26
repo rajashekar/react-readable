@@ -1,48 +1,63 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import Timestamp from 'react-timestamp'
+import { connect } from 'react-redux'
 
 import Comments from './Comments';
 import CreateComment from './CreateComment';
+
+import { onSelectPost, createPost, editPost, deletePost, 
+         createComment, deleteComment, editComment, changeComment, editDone,
+         sort, vote} from '../actions'
 
 /*
  * To show complete post with details
  */
 class PostView extends Component {
 
+  componentDidMount() {
+    console.log("Post view mounted")
+    console.log(this.props.match.params)
+    var postid = this.props.match.params.post_id
+    this.props.onSelectPost(postid)
+  }
+
     render() {
-        const { posts,post,comments,vote,onDeletePost,onSelectPost,sortBy,
-                onCreateComment,onDeleteComment,onEditComment,
-                onEditDone,onChangeComment } = this.props
+
+        const { posts,comments,selectedPost,sortBy,modifiedComment } = this.props.readable
+        const { onSelectPost, vote, deletePost, 
+                createComment, editComment, deleteComment,
+                changeComment, editDone} = this.props
+
         return (
             <div className="postdetail">
-                {post!==undefined && <div>
+                {selectedPost!==undefined && <div>
                     <Link className='button' to='/'>Back</Link>
-                    <Link className='button' onClick={() => onSelectPost(post.id)} to={'/editpost/'+post.id}>Edit</Link>
-                    <Link className='button' onClick={() => onDeletePost(post.id,posts,sortBy)} to='/'>Delete</Link>
-                    <h1>{post.title}</h1>
-                    <div>Author: {post.author}</div>
-                    <div>Posted: <Timestamp time={post.timestamp/1000}/></div>
-                    <div>Category: {post.category}</div>
-                    <div>Vote Score: {post.voteScore}</div>
-                    <div>{post.body}</div>
-                    <div><b>{post.commentCount} comments : </b></div>
+                    <Link className='button' onClick={() => onSelectPost(selectedPost.id)} to={'/editpost/'+selectedPost.id}>Edit</Link>
+                    <Link className='button' onClick={() => deletePost(selectedPost.id,posts,sortBy)} to='/'>Delete</Link>
+                    <h1>{selectedPost.title}</h1>
+                    <div>Author: {selectedPost.author}</div>
+                    <div>Posted: <Timestamp time={selectedPost.timestamp/1000}/></div>
+                    <div>Category: {selectedPost.category}</div>
+                    <div>Vote Score: {selectedPost.voteScore}</div>
+                    <div>{selectedPost.body}</div>
+                    <div><b>{selectedPost.commentCount} comments : </b></div>
                     <div>
                         <Comments
-                            parentId={post.id}
+                            parentId={selectedPost.id}
                             comments={comments}
                             sortBy={sortBy}
                             vote={vote}
-                            onDeleteComment={onDeleteComment}
-                            onEditComment={onEditComment}
-                            onChangeComment={onChangeComment}
-                            onEditDone={onEditDone}
+                            onDeleteComment={commentid => deleteComment(commentid,comments)}
+                            onEditComment={commentid => editComment(commentid,comments)}
+                            onChangeComment={changeComment}
+                            onEditDone={commentid => editDone(commentid,modifiedComment,comments)}
                         />
                     </div>
                     <div>
                         <CreateComment
-                            parentId={post.id}
-                            onCreateComment={onCreateComment}
+                            parentId={selectedPost.id}
+                            onCreateComment={comment => createComment(comment,comments)}
                         />
                     </div>
                 </div>
@@ -52,4 +67,16 @@ class PostView extends Component {
     }
 }
 
-export default PostView;
+function mapStateToProps({readable}) {
+    return {
+        readable
+    }
+}
+
+const mapDispatchToProps =  {
+    onSelectPost, createPost, editPost, deletePost,
+    createComment, deleteComment, editComment, changeComment, editDone,
+    sort, vote
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(PostView)

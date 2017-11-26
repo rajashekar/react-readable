@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import serializeForm from 'form-serialize'
+import { connect } from 'react-redux'
+
+import {createPost} from '../actions'
 
 /*
   To create post
@@ -26,7 +29,8 @@ class CreatePost extends Component {
             voteScore: 1,
             commentCount: 0
         }
-        this.props.onCreatePost(post)
+        this.props.createPost(post)
+        this.props.history.push("/")
 	}
 
     render() {
@@ -69,4 +73,14 @@ class CreatePost extends Component {
     }
 }
 
-export default CreatePost;
+function mapStateToProps({readable}) {
+    return {
+        readable
+    }
+}
+
+const mapDispatchToProps =  {
+    createPost
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreatePost)

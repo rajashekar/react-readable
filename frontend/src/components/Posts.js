@@ -27,7 +27,7 @@ class Posts extends Component {
                     <div className="arrow down" onClick={() => vote("posts","downVote",post.id,posts,sortBy)}></div>
                 </div>
                 <div className="post">
-                    <Link to={`/post/${post.id}`} className="post-title" key={post.id}>
+                    <Link to={`/${post.category}/${post.id}`} className="post-title" key={post.id}>
                         <div>
                             <b className="posttitle" onClick={() => onSelectPost(post.id)}>{post.title}</b> by <i>{post.author}</i>
                             &nbsp; (posted on <Timestamp time={post.timestamp/1000}/>)
