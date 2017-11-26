@@ -21,6 +21,13 @@ class PostView extends Component {
     this.props.onSelectPost(postid)
   }
 
+  doPostExists(post) {
+    return (
+        post!==undefined && 
+        post.id!==undefined && 
+        post.error===undefined)
+  }
+
     render() {
 
         const { posts,comments,selectedPost,sortBy,modifiedComment } = this.props.readable
@@ -30,7 +37,7 @@ class PostView extends Component {
 
         return (
             <div className="postdetail">
-                {(selectedPost!==undefined && selectedPost.error===undefined) ? <div>
+                {(this.doPostExists(selectedPost)) ? <div>
                     <Link className='button' to='/'>Back</Link>
                     <Link className='button' onClick={() => onSelectPost(selectedPost.id)} to={'/editpost/'+selectedPost.id}>Edit</Link>
                     <Link className='button' onClick={() => deletePost(selectedPost.id,posts,sortBy)} to='/'>Delete</Link>
