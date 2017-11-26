@@ -14,9 +14,6 @@ import { getCategories, onSelectCategory,
 class Categories extends Component {
 
   componentDidMount() {
-    console.log("categories did mount")
-    console.log(this.props)
-    console.log(this.props.match.params.category)
     var category;
     const {sortBy} = this.props.readable
     const {getCategories, onSelectCategory} = this.props

@@ -19,7 +19,6 @@ class CreatePost extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 		const values = serializeForm(e.target, { hash: true })
-        console.log(values)
         const post = {...values,
             id: Math.random().toString(36).substr(-8)+
                 Math.random().toString(36).substr(-8)+
@@ -34,7 +33,6 @@ class CreatePost extends Component {
 	}
 
     render() {
-        console.log('Create post')
         return (
             <div className="container">
                 <Link className='text-left' to='/'>Back</Link>

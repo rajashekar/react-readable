@@ -13,8 +13,6 @@ class EditPost extends Component {
         const { posts,sortBy } = this.props.readable
 		e.preventDefault()
 		const post = serializeForm(e.target, { hash: true })
-        console.log(post)
-        console.log(this.props)
         this.props.editPost(post,posts,sortBy)
         this.props.history.push("/")
     }

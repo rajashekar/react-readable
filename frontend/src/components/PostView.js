@@ -16,8 +16,6 @@ import { onSelectPost, createPost, editPost, deletePost,
 class PostView extends Component {
 
   componentDidMount() {
-    console.log("Post view mounted")
-    console.log(this.props.match.params)
     var postid = this.props.match.params.post_id
     this.props.onSelectPost(postid)
   }

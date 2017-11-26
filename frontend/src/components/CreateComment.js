@@ -21,7 +21,6 @@ class CreateComment extends Component {
             voteScore: 1,
             parentId: this.props.parentId
         }
-        console.log(comment)
         this.props.onCreateComment(comment)
         // to clear the form values
         this.commentFormRef.reset(); 
