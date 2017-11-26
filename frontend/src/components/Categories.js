@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom'
-import Posts from './Posts';
 import { connect } from 'react-redux'
+
+import Posts from './Posts';
+import NotFound from './NotFound';
 
 import { getCategories, onSelectCategory, 
          onSelectPost, deletePost, 
@@ -14,6 +16,11 @@ import { getCategories, onSelectCategory,
 class Categories extends Component {
 
   componentDidMount() {
+    console.log("categories mount")
+    this.fetchCategories()
+  }
+
+  fetchCategories() {
     var category;
     const {sortBy} = this.props.readable
     const {getCategories, onSelectCategory} = this.props
@@ -26,12 +33,31 @@ class Categories extends Component {
     onSelectCategory(category,sortBy!==undefined?sortBy:"votes")
   }
 
+  doCategoryExists = (category,categories) => {
+    if(category==="all") {
+        return true
+    }
+    if(categories!==undefined) {
+        for(var i=0;i<categories.length;i++) {
+            if(categories[i].name === category) {
+                return true
+            }
+        }
+    }
+    return false
+  }
+
   render() {
 
     const { categories,posts,sortBy } = this.props.readable
     const { onSelectCategory, onSelectPost, deletePost, sort, vote} = this.props
+    const currentCategory = this.props.match.params.category? 
+                            this.props.match.params.category:
+                            "all"
 
     return (
+    <div>
+        {this.doCategoryExists(currentCategory,categories) ? (
         <div>
             <div className="layout_3col_left">
                 <div><b>Categories</b></div>
@@ -59,6 +85,10 @@ class Categories extends Component {
                     />
             </div>
         </div>
+        ) : (
+            <NotFound />
+        )}
+    </div> 
     );
   }
 }

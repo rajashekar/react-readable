@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 
 import Comments from './Comments';
 import CreateComment from './CreateComment';
+import NotFound from './NotFound';
 
 import { onSelectPost, createPost, editPost, deletePost, 
          createComment, deleteComment, editComment, changeComment, editDone,
@@ -29,7 +30,7 @@ class PostView extends Component {
 
         return (
             <div className="postdetail">
-                {selectedPost!==undefined && <div>
+                {(selectedPost!==undefined && selectedPost.error===undefined) ? <div>
                     <Link className='button' to='/'>Back</Link>
                     <Link className='button' onClick={() => onSelectPost(selectedPost.id)} to={'/editpost/'+selectedPost.id}>Edit</Link>
                     <Link className='button' onClick={() => deletePost(selectedPost.id,posts,sortBy)} to='/'>Delete</Link>
@@ -59,6 +60,8 @@ class PostView extends Component {
                         />
                     </div>
                 </div>
+                : 
+                <NotFound />
                 }
             </div>
         )
